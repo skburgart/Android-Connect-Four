@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical">
+        
+    <com.stevekb.connectfour.BoardView
+        android:id="@+id/boardView"
+	    android:layout_weight="1"
+	    android:layout_width="fill_parent"
+        android:layout_height="0dip"/>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/hello" />
-
+	<com.google.ads.AdView
+	    ads:adUnitId="a14f33422e313ff"
+	    ads:adSize="BANNER"        
+	    ads:testDevices="2ABCAD1E8D18DC4A499224D2A62BDF41"
+	    ads:loadAdOnCreate="true"
+	    android:id="@+id/adView"
+	    android:layout_width="fill_parent"
+	    android:layout_height="wrap_content"/>
+	
 </LinearLayout>
