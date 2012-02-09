@@ -12,15 +12,25 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.Toast;
 
 public class BoardView extends SurfaceView implements
 		SurfaceView.OnTouchListener {
 
+	public enum WinType {
+		HORIZONTAL, VERTICAL, DIAG_POS, DIAG_NEG
+	};
+
 	private float BOARD_MARGIN = 25;
 
 	private int previewSpot = -1;
+
+	private boolean gameInProgress = true;
+
 	private RectF boardRect;
 	private Player onPlayer = Player.RED;
+	private WinType win;
+	private int winX = -1, winY = -1;
 
 	private static final int BOARD_COLOR = Color.YELLOW;
 	private static final int BG_COLOR = Color.rgb(232, 232, 232);
@@ -67,6 +77,9 @@ public class BoardView extends SurfaceView implements
 		c.drawRoundRect(boardRect, 20f, 20f, boardPaint);
 
 		DrillHoles(c);
+
+		if (winX != -1)
+			ShowWinLine(c);
 	}
 
 	private void ShowPreviewSpot(Canvas c) {
@@ -79,8 +92,10 @@ public class BoardView extends SurfaceView implements
 		else
 			playerPaint.setColor(Color.BLACK);
 
-		c.drawCircle(initial + deltaX * previewSpot, boardRect.top - pieceRadius / 2, pieceRadius + 1, borderPaint);
-		c.drawCircle(initial + deltaX * previewSpot, boardRect.top - pieceRadius / 2, pieceRadius, playerPaint);
+		c.drawCircle(initial + deltaX * previewSpot, boardRect.top
+				- pieceRadius / 2, pieceRadius + 1, borderPaint);
+		c.drawCircle(initial + deltaX * previewSpot, boardRect.top
+				- pieceRadius / 2, pieceRadius, playerPaint);
 	}
 
 	private void DrillHoles(Canvas c) {
@@ -109,40 +124,149 @@ public class BoardView extends SurfaceView implements
 		}
 	}
 
+	private void ShowWinLine(Canvas c) {
+
+		float deltaX = (boardRect.right - boardRect.left - BOARD_MARGIN) / 7;
+		float deltaY = (boardRect.bottom - boardRect.top - BOARD_MARGIN) / 7;
+		float winXStart = boardRect.left + ((deltaX + BOARD_MARGIN) / 2)
+				+ deltaX * winX;
+		float winYStart = boardRect.top + ((deltaY + BOARD_MARGIN) / 2)
+				+ deltaY * (6 - winY);
+		float winXEnd;
+		float winYEnd;
+
+		switch (win) {
+		case HORIZONTAL:
+			winXEnd = winXStart + deltaX * 3;
+			winYEnd = winYStart;
+			break;
+		case VERTICAL:
+			winXEnd = winXStart;
+			winYEnd = winYStart - deltaY * 3;
+			break;
+		case DIAG_POS:
+			winXEnd = winXStart + deltaX * 3;
+			winYEnd = winYStart - deltaY * 3;
+			break;
+		default:
+			winXEnd = winXStart - deltaX * 3;
+			winYEnd = winYStart - deltaY * 3;
+			break;
+		}
+
+		Paint linePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+		linePaint.setColor(Color.BLACK);
+		linePaint.setStrokeWidth(21f);
+		c.drawLine(winXStart, winYStart, winXEnd, winYEnd, linePaint);
+
+		linePaint.setColor(Color.GREEN);
+		linePaint.setStrokeWidth(20f);
+		c.drawLine(winXStart, winYStart, winXEnd, winYEnd, linePaint);
+
+	}
+
 	public boolean onTouch(View v, MotionEvent event) {
-		if (event.getAction() == MotionEvent.ACTION_DOWN
-				|| event.getAction() == MotionEvent.ACTION_MOVE) {
+		if (gameInProgress) {
+			if (event.getAction() == MotionEvent.ACTION_DOWN
+					|| event.getAction() == MotionEvent.ACTION_MOVE) {
 
-			previewSpot = touchToSpot(event.getX());
+				previewSpot = touchToSpot(event.getX());
 
-			invalidate();
-			
-			return true;
-		} else if (event.getAction() == MotionEvent.ACTION_UP) {
+				invalidate();
 
-			previewSpot = -1;
-			int toDrop = touchToSpot(event.getX());
+				return true;
+			} else if (event.getAction() == MotionEvent.ACTION_UP) {
 
-			for (int i = 0; i < 7; i++) {
-				if (myBoard.spots[i][toDrop] == Player.BLANK) {
-					myBoard.spots[i][toDrop] = onPlayer;
+				previewSpot = -1;
+				int toDrop = touchToSpot(event.getX());
 
-					onPlayer = (onPlayer == Player.BLACK) ? Player.RED
-							: Player.BLACK;
+				for (int i = 0; i < 7; i++) {
+					if (myBoard.spots[i][toDrop] == Player.BLANK) {
+						myBoard.spots[i][toDrop] = onPlayer;
 
-					break;
+						onPlayer = (onPlayer == Player.BLACK) ? Player.RED
+								: Player.BLACK;
+
+						break;
+					}
 				}
-			}
 
-			invalidate();
-			CheckGameState();
-			return true;
+				invalidate();
+				CheckGameState();
+
+				return true;
+			}
 		}
 		return false;
 	}
-	
-	private void CheckGameState() {
-		
+
+	private Player CheckGameState() {
+
+		// Check horizontal
+		for (int i = 0; i < 7; i++)
+			for (int j = 0; j < 4; j++)
+				if (myBoard.spots[i][j] != Player.BLANK)
+					if (myBoard.spots[i][j] == myBoard.spots[i][j + 1]
+							&& myBoard.spots[i][j] == myBoard.spots[i][j + 2]
+							&& myBoard.spots[i][j] == myBoard.spots[i][j + 3]
+							&& myBoard.spots[i][j] != Player.BLANK) {
+
+						winX = j;
+						winY = i;
+						win = WinType.HORIZONTAL;
+						gameInProgress = false;
+						return myBoard.spots[i][j];
+					}
+
+		// Check Vertical
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 7; j++)
+				if (myBoard.spots[i][j] != Player.BLANK)
+					if (myBoard.spots[i][j] == myBoard.spots[i + 1][j]
+							&& myBoard.spots[i][j] == myBoard.spots[i + 2][j]
+							&& myBoard.spots[i][j] == myBoard.spots[i + 3][j]
+							&& myBoard.spots[i][j] != Player.BLANK) {
+
+						winX = j;
+						winY = i;
+						win = WinType.VERTICAL;
+						gameInProgress = false;
+						return myBoard.spots[i][j];
+					}
+
+		// Check Positive Slope
+		for (int i = 0; i < 4; i++)
+			for (int j = 0; j < 4; j++)
+				if (myBoard.spots[i][j] != Player.BLANK)
+					if (myBoard.spots[i][j] == myBoard.spots[i + 1][j + 1]
+							&& myBoard.spots[i][j] == myBoard.spots[i + 2][j + 2]
+							&& myBoard.spots[i][j] == myBoard.spots[i + 3][j + 3]
+							&& myBoard.spots[i][j] != Player.BLANK) {
+
+						winX = j;
+						winY = i;
+						win = WinType.DIAG_POS;
+						gameInProgress = false;
+						return myBoard.spots[i][j];
+					}
+
+		// Check Negative Slope
+		for (int i = 0; i < 4; i++)
+			for (int j = 3; j < 7; j++)
+				if (myBoard.spots[i][j] != Player.BLANK)
+					if (myBoard.spots[i][j] == myBoard.spots[i + 1][j - 1]
+							&& myBoard.spots[i][j] == myBoard.spots[i + 2][j - 2]
+							&& myBoard.spots[i][j] == myBoard.spots[i + 3][j - 3]) {
+
+						winX = j;
+						winY = i;
+						win = WinType.DIAG_NEG;
+						gameInProgress = false;
+						return myBoard.spots[i][j];
+					}
+
+		return Player.BLANK;
 	}
 
 	private int touchToSpot(float x) {
