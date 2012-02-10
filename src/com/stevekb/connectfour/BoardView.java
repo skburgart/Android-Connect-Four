@@ -1,6 +1,8 @@
 package com.stevekb.connectfour;
 
 import com.stevekb.connectfour.Board.Player;
+import com.stevekb.connectfour.Board.WinType;
+
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,25 +18,30 @@ import android.widget.TextView;
 public class BoardView extends SurfaceView implements
 		SurfaceView.OnTouchListener {
 
-	public enum WinType {
-		HORIZONTAL, VERTICAL, DIAG_POS, DIAG_NEG
-	};
-
+	// ID Elements
 	private TextView gameOverText;
 	private LinearLayout gameOverLayout;
+	
+	// Drawing info
 	private float BOARD_MARGIN = 25;
-	private int previewSpot = -1;
-	private boolean gameInProgress = true;
 	private RectF boardRect;
+	private int previewSpot = -1;
+	
+	// Game Logic
+	private boolean gameInProgress = true;
 	private Player onPlayer = Player.RED;
 	private WinType win;
 	private int winX = -1, winY = -1;
+	
+	// Paint Settings
 	private static final int BOARD_COLOR = Color.YELLOW;
 	private static final int BG_COLOR = Color.rgb(232, 232, 232);
 	private static final Paint boardPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private static final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private static final Paint borderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private static final Paint playerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+	
+	// Board Storage
 	private Board myBoard = new Board();
 
 	public BoardView(Context context, AttributeSet attrs) {
@@ -62,14 +69,13 @@ public class BoardView extends SurfaceView implements
 
 	private void DrawBoard(Canvas c, float maxX, float maxY) {
 
-		boardRect = new RectF(maxX * 0.05f, maxY * 0.1f, maxX * 0.95f,
-				maxY * 0.95f);
-		RectF borderRect = new RectF(maxX * 0.05f - 1, maxY * 0.1f - 1,
-				maxX * 0.95f + 1, maxY * 0.95f + 1);
+		boardRect = new RectF(maxX * 0.05f, maxY * 0.1f, maxX * 0.95f, maxY * 0.95f);
+		RectF borderRect = new RectF(maxX * 0.05f - 1, maxY * 0.1f - 1, maxX * 0.95f + 1, maxY * 0.95f + 1);
 
 		if (previewSpot != -1)
 			ShowPreviewSpot(c);
 
+		// Draw board
 		c.drawRoundRect(borderRect, 20f, 20f, borderPaint);
 		c.drawRoundRect(boardRect, 20f, 20f, boardPaint);
 
