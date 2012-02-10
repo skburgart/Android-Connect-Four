@@ -30,6 +30,6 @@ public class MainActivity extends Activity {
 	}
 
 	public void buttonQuit(View v) {
-		System.exit(0);
+		finish();
 	}
 }
