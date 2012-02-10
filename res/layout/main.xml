@@ -5,6 +5,43 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/gameOverLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textGameOver"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:layout_gravity="center_horizontal"/>
+
+        <TableRow
+            android:id="@+id/buttonRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/buttonRematch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Rematch"
+                android:width="100dp" android:onClick="buttonRematch"/>
+
+            <Button
+                android:id="@+id/buttonQuit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quit"
+                android:width="100dp" android:onClick="buttonQuit"/>
+            
+        </TableRow>
+    </LinearLayout>
         
     <com.stevekb.connectfour.BoardView
         android:id="@+id/boardView"

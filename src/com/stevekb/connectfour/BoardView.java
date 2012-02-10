@@ -7,11 +7,15 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.opengl.Visibility;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class BoardView extends SurfaceView implements
@@ -21,32 +25,30 @@ public class BoardView extends SurfaceView implements
 		HORIZONTAL, VERTICAL, DIAG_POS, DIAG_NEG
 	};
 
+	private TextView gameOverText;
+	private LinearLayout gameOverLayout;
 	private float BOARD_MARGIN = 25;
-
 	private int previewSpot = -1;
-
 	private boolean gameInProgress = true;
-
 	private RectF boardRect;
 	private Player onPlayer = Player.RED;
 	private WinType win;
 	private int winX = -1, winY = -1;
-
 	private static final int BOARD_COLOR = Color.YELLOW;
 	private static final int BG_COLOR = Color.rgb(232, 232, 232);
 	private static final Paint boardPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private static final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private static final Paint borderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 	private static final Paint playerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-	private Context context;
 	private Board myBoard = new Board();
 
 	public BoardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		this.context = context;
+		// Set touch listener
 		this.setOnTouchListener(this);
 
+		// Set colors
 		this.setBackgroundColor(BG_COLOR);
 		boardPaint.setColor(BOARD_COLOR);
 		bgPaint.setColor(BG_COLOR);
@@ -193,7 +195,10 @@ public class BoardView extends SurfaceView implements
 				}
 
 				invalidate();
-				CheckGameState();
+
+				Player gameResult = CheckGameState();
+				if (gameResult != Player.BLANK)
+					GameOver(gameResult);
 
 				return true;
 			}
@@ -265,8 +270,39 @@ public class BoardView extends SurfaceView implements
 						gameInProgress = false;
 						return myBoard.spots[i][j];
 					}
+		
+		// Check for Full Board
+		boolean oneBlank = false;
+		for (int i = 0; i < 7; i++)
+			for (int j = 0; j < 7; j++)
+				if (myBoard.spots[i][j] == Player.BLANK) {
+					oneBlank = true;
+				}
+		if (!oneBlank) {
+			gameInProgress = false;
+			return Player.TIE;
+		}
 
 		return Player.BLANK;
+	}
+
+	private void GameOver(Player p) {
+		if (p == Player.RED)
+			gameOverText.setText("Red Wins!");
+		else if (p == Player.BLACK)
+			gameOverText.setText("Black Wins!");
+		else
+			gameOverText.setText("It's a Tie!");
+
+		gameOverLayout.setVisibility(View.VISIBLE);
+	}
+
+	public void setGameOverText(TextView t) {
+		gameOverText = t;
+	}
+
+	public void setGameOverLayout(LinearLayout l) {
+		gameOverLayout = l;
 	}
 
 	private int touchToSpot(float x) {
