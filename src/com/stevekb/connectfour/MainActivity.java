@@ -1,10 +1,7 @@
 package com.stevekb.connectfour;
 
-import com.stevekb.connectfour.Board.Player;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,8 +10,6 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
 
 	private BoardView myBoardView;
-	private TextView gameOverText;
-	private LinearLayout gameOverLayout;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
