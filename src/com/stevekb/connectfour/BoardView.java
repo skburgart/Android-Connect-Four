@@ -15,8 +15,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class BoardView extends SurfaceView implements
-		SurfaceView.OnTouchListener {
+public class BoardView extends SurfaceView {
 
 	// ID Elements
 	private TextView gameOverText;
@@ -46,9 +45,6 @@ public class BoardView extends SurfaceView implements
 
 	public BoardView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-
-		// Set touch listener
-		this.setOnTouchListener(this);
 
 		// Set colors
 		this.setBackgroundColor(BG_COLOR);
@@ -169,7 +165,8 @@ public class BoardView extends SurfaceView implements
 
 	}
 
-	public boolean onTouch(View v, MotionEvent event) {
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
 		if (gameInProgress) {
 			if (event.getAction() == MotionEvent.ACTION_DOWN
 					|| event.getAction() == MotionEvent.ACTION_MOVE) {
