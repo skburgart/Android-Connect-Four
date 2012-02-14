@@ -2,6 +2,6 @@
 <resources>
 
     <string name="hello">Hello World, MainActivity!</string>
-    <string name="app_name">Simple Connect Four</string>
+    <string name="app_name">Simple Four-in-a-Line</string>
 
 </resources>
