@@ -336,6 +336,8 @@ public class BoardView extends SurfaceView implements SurfaceHolder.Callback {
 	public void surfaceCreated(SurfaceHolder holder) {
 		maxX = getWidth();
 		maxY = getHeight();
+		
+		invalidate();
 	}
 
 	public void surfaceDestroyed(SurfaceHolder holder) {
