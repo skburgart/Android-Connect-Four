@@ -52,7 +52,7 @@
 	<com.google.ads.AdView
 	    ads:adUnitId="a14f33422e313ff"
 	    ads:adSize="BANNER"        
-	    ads:testDevices="2ABCAD1E8D18DC4A499224D2A62BDF41"
+	    ads:testDevices="2387671384D56263C715B8EBE0E58260"
 	    ads:loadAdOnCreate="true"
 	    android:id="@+id/adView"
 	    android:layout_width="fill_parent"
