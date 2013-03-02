@@ -18,7 +18,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:textIsSelectable="false"/>
 
         <TableRow
             android:id="@+id/buttonRow"
@@ -30,14 +31,14 @@
                 android:id="@+id/buttonRematch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Rematch"
+                android:text="@string/rematch"
                 android:width="100dp" android:onClick="buttonRematch"/>
 
             <Button
                 android:id="@+id/buttonQuit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Quit"
+                android:text="@string/quit"
                 android:width="100dp" android:onClick="buttonQuit"/>
             
         </TableRow>
