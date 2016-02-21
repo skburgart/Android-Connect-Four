@@ -1,0 +1,65 @@
+apply plugin: 'com.android.application'
+
+buildscript {
+
+    repositories {
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath 'com.github.triplet.gradle:play-publisher:1.1.4'
+    }
+}
+
+apply plugin: 'com.github.triplet.play'
+
+play {
+    def jsonLocation = System.getenv("ANDROID_PUBLISH_JSON")
+    if (jsonLocation != null) {
+        jsonFile = file(jsonLocation)
+    }
+    track = 'production'
+}
+
+android {
+    compileSdkVersion 23
+    buildToolsVersion "23.0.2"
+
+    defaultConfig {
+        applicationId "com.stevekb.connectfour"
+        minSdkVersion 15
+        targetSdkVersion 23
+        def versionCodeString = System.getenv("VERSION_CODE")
+        if (versionCodeString != null) {
+            versionCode versionCodeString.toInteger()
+        } else {
+            versionCode 1
+        }
+        versionName System.getenv("VERSION_NAME")
+    }
+	
+    signingConfigs {
+        releaseSigning {
+            def keystoreLocation = System.getenv("ANDROID_KEYSTORE")
+            if (keystoreLocation != null) {
+                storeFile file(keystoreLocation)
+            }
+            storePassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+            keyAlias System.getenv("ANDROID_KEYSTORE_ALIAS")
+            keyPassword System.getenv("ANDROID_KEYSTORE_PASSWORD")
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            signingConfig signingConfigs.releaseSigning
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+}

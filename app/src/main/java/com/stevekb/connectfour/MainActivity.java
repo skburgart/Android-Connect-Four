@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 public class MainActivity extends Activity {
 
     private BoardView myBoardView;
@@ -15,6 +18,10 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
+
+        AdView mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("5DA56B53019C0A99B3AF21C923250D0F").build();
+        mAdView.loadAd(adRequest);
 
         myBoardView = (BoardView) findViewById(R.id.boardView);
 

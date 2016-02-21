@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Simple Four-in-a-Line</string>
+    <string name="quit">Quit</string>
+    <string name="rematch">Rematch</string>
+</resources>
