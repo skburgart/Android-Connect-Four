@@ -1,8 +1,5 @@
 package com.stevekb.connectfour;
 
-import com.stevekb.connectfour.Board.Player;
-import com.stevekb.connectfour.Board.WinType;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -16,21 +13,11 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.stevekb.connectfour.Board.Player;
+import com.stevekb.connectfour.Board.WinType;
+
 public class BoardView extends SurfaceView implements SurfaceHolder.Callback {
 
-    // ID Elements
-    private TextView gameOverText;
-    private LinearLayout gameOverLayout;
-    // Drawing info
-    private float BOARD_MARGIN = 25;
-    private RectF boardRect;
-    private int previewSpot = -1;
-    private int maxX, maxY;
-    // Game Logic
-    private boolean gameInProgress = true;
-    private Player onPlayer = Player.RED;
-    private WinType win;
-    private int winX = -1, winY = -1;
     // Paint Settings
     private static final int BOARD_COLOR = Color.YELLOW;
     private static final int BG_COLOR = Color.rgb(232, 232, 232);
@@ -38,6 +25,23 @@ public class BoardView extends SurfaceView implements SurfaceHolder.Callback {
     private static final Paint bgPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private static final Paint borderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private static final Paint playerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+    // ID Elements
+    private TextView gameOverText;
+    private LinearLayout gameOverLayout;
+
+    // Drawing info
+    private float BOARD_MARGIN = 25;
+    private RectF boardRect;
+    private int previewSpot = -1;
+    private int maxX, maxY;
+
+    // Game Logic
+    private boolean gameInProgress = true;
+    private Player onPlayer = Player.RED;
+    private WinType win;
+    private int winX = -1, winY = -1;
+
     // Board Storage
     private Board myBoard = new Board();
 
@@ -345,7 +349,7 @@ public class BoardView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int width,
-            int height) {
+                               int height) {
         maxX = width;
         maxY = height;
     }
