@@ -1,0 +1,1 @@
+Connect four of your pieces in a row to win!

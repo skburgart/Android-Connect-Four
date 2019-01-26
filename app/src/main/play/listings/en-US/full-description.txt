@@ -1,0 +1,5 @@
+A very simple open source version of four-in-a-line! A great player versus player game.
+
+Scales to any screen size, great for tablets!
+
+Source available at https://github.com/skburgart/ConnectFour
