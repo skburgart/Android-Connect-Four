@@ -64,7 +64,7 @@ android {
     targetSdkVersion 28
 
     // Defines the version number of your app.
-    versionCode 9
+    versionCode 10
 
     // Defines a user-friendly version name for your app.
     versionName System.getenv("CI_COMMIT_SHORT_SHA")
